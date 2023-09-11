@@ -64,17 +64,14 @@ open class Dupnium {
     }
     
     private func _getBundle(locale: Locale) -> Bundle? {
-        if let fullPath = bundle.path(forResource: locale.identifier.replacingOccurrences(of: "_", with: "-"), ofType: "lproj"),
-           FileManager.default.fileExists(atPath: fullPath) {
-            return Bundle(path: fullPath)
+        guard let language = language(for: locale) else {
+            return nil
+        }
+        guard let path = bundle.path(forResource: language, ofType: "lproj") else {
+            return nil
         }
         
-        if let language = language(for: locale),
-           let path = bundle.path(forResource: language, ofType: "lproj") {
-            return Bundle(path: path)
-        }
-        
-        return nil
+        return Bundle(path: path)
     }
     
     fileprivate func _update() {
